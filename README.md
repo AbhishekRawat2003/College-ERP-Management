@@ -1,15 +1,17 @@
 <div align="center">
 
-# 🎓 College ERP System
+# 🎓 EduMa — College ERP Management System
 
-### Enterprise Resource Planning Solution for Educational Institutions
+### A Full-Stack Enterprise Resource Planning Solution for Educational Institutions
 
-[![Stars](https://img.shields.io/github/stars/Ansarimajid/College-ERP?style=for-the-badge&logo=github)](https://github.com/Ansarimajid/College-ERP)
 [![Python](https://img.shields.io/badge/Python-3.x-blue?style=for-the-badge&logo=python)](https://www.python.org/)
 [![Django](https://img.shields.io/badge/Django-Framework-green?style=for-the-badge&logo=django)](https://www.djangoproject.com/)
 [![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
+[![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-brightgreen?style=for-the-badge)](CONTRIBUTING.md)
 
-[Live Demo](https://syncx.pythonanywhere.com) • [Report Bug](https://github.com/Ansarimajid/College-ERP/issues) • [Request Feature](https://github.com/Ansarimajid/College-ERP/issues)
+**EduMa** streamlines everything a college needs to run day-to-day — student records, staff operations, attendance, results, leave management, and feedback — inside one clean, role-based platform.
+
+[Live Demo](https://syncx.pythonanywhere.com) • [Report Bug](../../issues) • [Request Feature](../../issues)
 
 </div>
 
@@ -19,186 +21,214 @@
 
 - [About](#-about)
 - [Features](#-features)
+- [Tech Stack](#️-tech-stack)
+- [Project Structure](#-project-structure)
+- [Core Data Models](#-core-data-models)
+- [Authentication Flow](#-authentication-flow)
+- [Getting Started](#-getting-started)
 - [Demo Credentials](#-demo-credentials)
-- [Technology Stack](#-technology-stack)
-- [Installation](#-installation)
 - [Screenshots](#-screenshots)
-- [Roadmap](#-roadmap)
+- [Roadmap](#️-roadmap)
 - [Contributing](#-contributing)
-- [Support](#-support)
+- [Support the Project](#-support-the-project)
+- [License](#-license)
+- [Contact](#-contact--support)
 
 ---
 
 ## 🎯 About
 
-**College ERP** is a comprehensive Enterprise Resource Planning system designed specifically for educational institutions. Built with Python and Django, this full-stack web application streamlines administrative tasks, student management, and staff operations in one unified platform.
+**EduMa (College ERP)** is a comprehensive, open-source ERP system built with **Python and Django** for schools, colleges, and universities. It brings students, staff, and administrators onto a single unified platform — replacing scattered spreadsheets and manual paperwork with structured, role-based digital workflows.
 
-### ✨ Why Choose This ERP?
+### ✨ Why EduMa?
 
-- 🚀 **Modern Tech Stack** - Built with Django for robust performance
-- 📊 **Data-Driven Insights** - Visual dashboards for performance tracking
-- 👥 **Multi-Role Support** - Separate interfaces for Admin, Staff, and Students
-- 🔒 **Secure** - Role-based access control and authentication
-- 📱 **Responsive Design** - Works seamlessly on all devices
+| | |
+|---|---|
+| 🚀 **Modern Stack** | Built on Django for stability, security, and rapid development |
+| 👥 **Multi-Role Architecture** | Dedicated portals for Admin, Staff, and Students |
+| 🔒 **Secure by Design** | Role-based access control + Google reCAPTCHA authentication |
+| 📊 **Data-Driven** | Visual dashboards for attendance, results, and performance |
+| 📱 **Responsive** | Fully usable across desktop, tablet, and mobile |
+| 🌍 **Open Source** | MIT licensed — free to use, modify, and contribute to |
 
 ---
 
 ## 🚀 Features
 
-### 👨‍💼 Admin Dashboard
-
-<details>
-<summary>Click to expand Admin features</summary>
-
-- 📈 **Analytics Dashboard** - Overview charts for student/staff performance, courses, and subjects
-- 👥 **Staff Management** - Complete CRUD operations for staff members
-- 🎓 **Student Management** - Add, update, and delete student records
-- 📚 **Course Management** - Organize and manage academic courses
-- 📖 **Subject Management** - Handle subject assignments and details
-- 📅 **Session Management** - Control academic sessions and terms
-- ✅ **Attendance Monitoring** - View and track student attendance
-- 💬 **Feedback System** - Review and respond to feedback from students/staff
-- 🏖️ **Leave Management** - Approve or reject leave applications
-
-</details>
+### 👨‍💼 Admin (HOD) Dashboard
+- 📈 Analytics overview — student/staff performance, course & subject stats
+- 👥 Full CRUD for staff members
+- 🎓 Full CRUD for student records
+- 📚 Course management
+- 📖 Subject management & staff-subject assignment
+- 📅 Academic session/term management
+- ✅ Attendance monitoring across all classes
+- 💬 Feedback review from students & staff
+- 🏖️ Leave request approval/rejection
 
 ### 👨‍🏫 Staff Portal
-
-<details>
-<summary>Click to expand Staff features</summary>
-
-- 📊 **Performance Dashboard** - Track student progress and subject analytics
-- ✏️ **Attendance Management** - Mark and update student attendance
-- 📝 **Result Entry** - Add and modify student examination results
-- 🏖️ **Leave Applications** - Apply for personal leave
-- 💭 **Feedback Channel** - Send feedback to administration
-
-</details>
+- 📊 Performance dashboard for assigned subjects
+- ✏️ Mark and update student attendance
+- 📝 Enter and revise examination results
+- 🏖️ Apply for personal leave
+- 💭 Send feedback directly to admin
 
 ### 🎓 Student Portal
-
-<details>
-<summary>Click to expand Student features</summary>
-
-- 📊 **Personal Dashboard** - View attendance, results, and leave status
-- 📅 **Attendance Tracking** - Monitor class attendance records
-- 🎯 **Result Portal** - Access examination results and grades
-- 🏖️ **Leave Requests** - Submit leave applications
-- 💬 **Feedback System** - Provide feedback to HOD
-
-</details>
+- 📊 Personal dashboard — attendance, results, leave status at a glance
+- 📅 Attendance history tracking
+- 🎯 View examination results/grades
+- 🏖️ Submit leave requests
+- 💬 Send feedback to HOD
 
 ---
 
-## 🔑 Demo Credentials
-
-### 🌐 Live Demo
-Visit: **[https://syncx.pythonanywhere.com](https://syncx.pythonanywhere.com)** (v2.0.0)
-
-### Login Details
-
-| Role | Email | Password |
-|------|-------|----------|
-| 👨‍🎓 **Student** | `studentone@student.com` | `studentone` |
-| 👨‍🏫 **Staff** | `staffone@staff.com` | `staffone` |
-
----
-
-## 🛠️ Technology Stack
+## 🛠️ Tech Stack
 
 | Category | Technologies |
-|----------|-------------|
+|---|---|
 | **Backend** | Python, Django Framework |
 | **Frontend** | HTML5, CSS3, JavaScript, Bootstrap |
-| **Database** | SQLite (Development), PostgreSQL (Production Ready) |
-| **Authentication** | Django Auth, Google reCAPTCHA |
-| **Deployment** | PythonAnywhere |
+| **Database** | SQLite (development), PostgreSQL (production-ready) |
+| **Authentication** | Django Auth (custom email backend) + Google reCAPTCHA |
+| **Deployment** | PythonAnywhere / Procfile-based hosting |
 
 ---
 
-## 📥 Installation
+## 🗂 Project Structure
 
-### Prerequisites
-
-Ensure you have the following installed:
-
-- ✅ [Git](https://git-scm.com/) - Version control
-- ✅ [Python 3.x](https://www.python.org/downloads/) - Programming language
-- ✅ [pip](https://pip.pypa.io/en/stable/installing/) - Package manager
-
-### Step-by-Step Setup
-
-#### 1️⃣ Clone the Repository
-
-```bash
-git clone https://github.com/Ansarimajid/College-ERP.git
-cd College-ERP
+```
+College-ERP/
+│
+├── college_management_system/      # Django project configuration
+│   ├── settings.py                 # App settings, database, static files
+│   ├── urls.py                     # Root URL dispatcher
+│   └── wsgi.py                     # WSGI entry point for deployment
+│
+├── main_app/                       # Core Django application
+│   ├── migrations/                 # Database migration files
+│   ├── templates/
+│   │   └── main_app/
+│   │       ├── admin_templates/    # HOD/Admin views
+│   │       ├── staff_templates/    # Staff views
+│   │       └── student_templates/  # Student views
+│   ├── static/                     # App-level static files
+│   ├── models.py                   # All database models
+│   ├── views.py                    # Role-based view logic
+│   ├── forms.py                    # Django forms
+│   ├── urls.py                     # App-level URL routes
+│   └── EmailBackend.py             # Custom email authentication backend
+│
+├── media/                          # User-uploaded files (profile photos)
+├── Showcase/                       # README screenshots
+├── reports_and_resource/           # Supporting documents
+│
+├── manage.py                       # Django management script
+├── requirements.txt                # Python dependencies
+├── college-erp.yml                 # Conda environment definition
+├── Procfile                        # Deployment config (PythonAnywhere)
+├── db.sqlite3                      # Development database
+└── README.md
 ```
 
-#### 2️⃣ Create Virtual Environment
+---
 
-**Option A: Using Conda (Recommended)**
+## 🧠 Core Data Models
+
+The system revolves around **three user roles**, each with a distinct login, dashboard, and permission scope:
+
+| Role | Description | Key Capabilities |
+|---|---|---|
+| **HODAdmin** | Head of Department / Administrator | Full CRUD on staff, students, courses, subjects, sessions; views all attendance & results; manages leave approvals & feedback |
+| **Staff** | Teaching faculty | Marks attendance, enters results, applies for leave, sends feedback to admin |
+| **Student** | Enrolled student | Views own attendance & results, applies for leave, sends feedback |
+
+**Key models** (`main_app/models.py`):
+
+| Model | Purpose |
+|---|---|
+| `CustomUser` | Extended Django user with `user_type` (1 = Admin, 2 = Staff, 3 = Student) |
+| `AdminHOD` | Admin profile linked to `CustomUser` |
+| `Staffs` | Staff profile with department/address info |
+| `Students` | Student profile linked to course, session & profile picture |
+| `Courses` | Academic course (e.g. B.Sc Computer Science) |
+| `Subjects` | Subject under a course, assigned to a staff member |
+| `SessionYearModel` | Academic year/session tracking |
+| `Attendance` | Attendance session record per subject per date |
+| `AttendanceReport` | Individual student attendance status per session |
+| `LeaveReportStaff` / `LeaveReportStudent` | Leave request records |
+| `FeedbackStaffs` / `FeedbackStudent` | Feedback messages sent to admin |
+| `StudentResult` | Exam marks per student per subject |
+
+---
+
+## 🔐 Authentication Flow
+
+EduMa uses a **custom authentication backend** (`EmailBackend.py`) that allows users to log in with **email instead of username**. Post-login redirection is driven by `user_type`, routing each user straight to their correct dashboard (Admin / Staff / Student).
+
+> ⚠️ If you modify authentication logic, make sure the `user_type`-based routing stays intact — it's what keeps each role confined to its own portal.
+
+---
+
+## 📥 Getting Started
+
+### Prerequisites
+- ✅ [Git](https://git-scm.com/)
+- ✅ [Python 3.x](https://www.python.org/downloads/)
+- ✅ [pip](https://pip.pypa.io/en/stable/installing/)
+
+### 1️⃣ Clone the Repository
+```bash
+git clone https://github.com/AbhishekRawat2003/College-ERP-Management.git
+cd College-ERP-Management
+```
+
+### 2️⃣ Set Up a Virtual Environment
+
+**Option A — Conda (recommended)**
 ```bash
 conda env create -f college-erp.yml
 conda activate Django-env
 ```
 
-**Option B: Using venv**
+**Option B — venv**
 
-<details>
-<summary>Windows</summary>
-
+Windows:
 ```bash
 python -m venv venv
 source venv/scripts/activate
 ```
-</details>
 
-<details>
-<summary>macOS</summary>
-
+macOS:
 ```bash
 python3 -m venv venv
 source venv/bin/activate
 ```
-</details>
 
-<details>
-<summary>Linux</summary>
-
+Linux:
 ```bash
 virtualenv .
 source bin/activate
 ```
-</details>
 
-#### 3️⃣ Install Dependencies
-
+### 3️⃣ Install Dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-#### 4️⃣ Configure Settings
-
+### 4️⃣ Configure Settings
 Open `settings.py` and update:
-
 ```python
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 ```
-
 > ⚠️ **Security Note:** Never use `ALLOWED_HOSTS = ['*']` in production!
 
-#### 5️⃣ Database Setup
-
+### 5️⃣ Set Up the Database
 ```bash
 python manage.py migrate
 python manage.py createsuperuser
 ```
 
-Follow the prompts to create an admin account.
-
-#### 6️⃣ Run Development Server
-
+### 6️⃣ Run the Development Server
 ```bash
 # Windows
 python manage.py runserver
@@ -207,28 +237,37 @@ python manage.py runserver
 python3 manage.py runserver
 ```
 
-🎉 **Success!** Visit `http://127.0.0.1:8000` in your browser
+🎉 Visit **http://127.0.0.1:8000** in your browser.
+
+---
+
+## 🔑 Demo Credentials
+
+| Role | Email | Password |
+|---|---|---|
+| 👨‍🎓 **Student** | `studentone@student.com` | `studentone` |
+| 👨‍🏫 **Staff** | `staffone@staff.com` | `staffone` |
 
 ---
 
 ## 📸 Screenshots
 
-![Demo Screenshot](Showcase/Screenshot_04.png)
-![Demo Screenshot](Showcase/Screenshot_03.png)
-![Demo Screenshot](Showcase/Screenshot_01.png)
-![Demo Screenshot](Showcase/Screenshot_02.png)
-
+<div align="center">
+<img src="Showcase/Screenshot_04.png" width="45%" />
+<img src="Showcase/Screenshot_03.png" width="45%" />
+<img src="Showcase/Screenshot_01.png" width="45%" />
+<img src="Showcase/Screenshot_02.png" width="45%" />
+</div>
 
 ---
 
 ## 🗺️ Roadmap
 
-### ✅ Completed Features
-
+### ✅ Completed
 - [x] Multi-role authentication system
-- [x] Complete CRUD operations for all entities
+- [x] Complete CRUD for all entities
 - [x] Attendance management system
-- [x] Result management with CBVs
+- [x] Result management (Class-Based Views)
 - [x] Leave application workflow
 - [x] Feedback system
 - [x] Email notifications
@@ -238,11 +277,9 @@ python3 manage.py runserver
 - [x] Responsive design
 - [x] Password reset functionality
 
-### 🔜 Upcoming Features
-
-
+### 🔜 Planned
 - [ ] SMS notifications
-- [ ] Advanced reporting and analytics
+- [ ] Advanced reporting & analytics
 - [ ] Online examination module
 - [ ] Library management system
 - [ ] Fee management integration
@@ -253,57 +290,46 @@ python3 manage.py runserver
 
 ## 🤝 Contributing
 
-Contributions make the open-source community an amazing place to learn and create. Any contributions you make are **greatly appreciated**!
+Contributions are what make open source great. Any help — big or small — is genuinely appreciated!
 
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
+1. Fork the project
+2. Create your feature branch: `git checkout -b feature/AmazingFeature`
+3. Commit your changes: `git commit -m 'Add some AmazingFeature'`
+4. Push to the branch: `git push origin feature/AmazingFeature`
 5. Open a Pull Request
+
+Please see [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines before opening an issue or PR.
 
 ---
 
 ## 💖 Support the Project
 
-If you find this project helpful, please consider:
+If EduMa helped you, consider:
 
-- ⭐ **Star this repository** on GitHub
-- 🐛 **Report bugs** to help improve the project
-- 💡 **Suggest new features** via issues
-- 📢 **Share** with fellow developers
-- 👨‍💻 **Contribute** to the codebase
-
-### Connect with the Developer
-
-[![GitHub](https://img.shields.io/badge/GitHub-Follow-black?style=for-the-badge&logo=github)](https://github.com/Ansarimajid)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=for-the-badge&logo=linkedin)](https://www.linkedin.com/in/ansmajidali)
+- ⭐ Starring this repository
+- 🐛 Reporting bugs you encounter
+- 💡 Suggesting new features via issues
+- 📢 Sharing it with other developers
+- 👨‍💻 Contributing code
 
 ---
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Licensed under the **MIT License** — see [LICENSE](LICENSE) for details.
 
 ---
 
 ## 📞 Contact & Support
 
-Having issues? Need help?
-
-- 📧 **Email:** [ansmajidali@gmail.com](mailto:ansmajidali@gmail.com)
-- 🐛 **Issues:** [GitHub Issues](https://github.com/Ansarimajid/College-ERP/issues)
-- 💬 **Discussions:** [GitHub Discussions](https://github.com/Ansarimajid/College-ERP/discussions)
-
----
+- 📧 **Email:** abhirawthdr@gmail.com
+- 🐛 **Issues:** [GitHub Issues](../../issues)
+- 💬 **Discussions:** [GitHub Discussions](../../discussions)
 
 <div align="center">
 
-### ⭐ Star History
+**Made with ❤️ by [Abhishek Rawat](https://github.com/AbhishekRawat2003)**
 
-[![Star History Chart](https://api.star-history.com/svg?repos=Ansarimajid/College-ERP&type=Date)](https://star-history.com/#Ansarimajid/College-ERP&Date)
-
-**Made with ❤️ by [Ansari Majid](https://github.com/Ansarimajid)**
-
-*If this project helped you, consider giving it a star! ⭐*
+*If this project helped you, consider giving it a ⭐!*
 
 </div>
