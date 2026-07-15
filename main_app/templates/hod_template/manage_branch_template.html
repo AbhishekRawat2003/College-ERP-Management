@@ -1,0 +1,53 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{page_title}}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+
+                <div class="card card-dark">
+                    <div class="card-header">
+                        <h3 class="card-title">{{page_title}}</h3>
+                    </div>
+
+                    <div class="card-body">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Branch Code</th>
+                                    <th>Branch Name</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for branch in branches %}
+                                <tr>
+                                    <td>{{ branch.id }}</td>
+                                    <td>{{ branch.branch_code }}</td>
+                                    <td>{{ branch.branch_name }}</td>
+                                    <td>
+                                        <a href="{% url 'edit_branch' branch.id %}" class="btn btn-info ">Edit</a>-
+                                        <a href="{% url 'delete_branch' branch.id %}" class="btn btn-danger">Delete</a>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4">No branches found</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {% include "main_app/form_template.html" with messages=messages form=form button_text="Update Branch" %}
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

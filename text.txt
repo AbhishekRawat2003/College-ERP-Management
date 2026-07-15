@@ -1,0 +1,24 @@
+Quick wins (kam effort, high value)
+
+Forgot Password / Email OTP reset — jo issue abhi tune manually shell se fix kiya, uske liye proper "Forgot Password" flow (email link ya OTP) add karo. Django ka built-in PasswordResetView use kar sakte ho.
+Profile picture upload — students/staff ke liye
+Dashboard analytics — attendance %, total students, subject-wise performance ka simple chart (Chart.js se)
+Export attendance/marks as PDF or Excel — HOD/staff ke liye report download karna
+
+Medium effort
+
+Fee management module — fee structure, payment tracking, due reminders
+Assignment/homework submission — students file upload kar sakein, staff review kare
+Timetable management — class schedule banane aur dikhane ke liye
+Notice board / Announcements — HOD se students/staff tak broadcast
+Leave application system — students/staff leave request kare, HOD approve/reject kare
+Exam & result management — marks entry, grade calculation, result PDF generation
+
+Advanced
+
+Real-time notifications — tumhare paas already Firebase setup hai (maine showFirebaseJS view dekha), isko push notifications (attendance marked, new notice, result published) ke liye use kar sakte ho
+Parent portal — parents apne bachche ka attendance/result dekh sakein (login ke through)
+Online fee payment gateway integration — Razorpay/Stripe
+Chat/messaging system — student-staff communication
+Library management — book issue/return tracking
+Biometric/QR-code based attendance — manual attendance ki jagah
