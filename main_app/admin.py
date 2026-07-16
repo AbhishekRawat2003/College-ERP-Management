@@ -1,19 +1,54 @@
+# from django.contrib import admin
+# from django.contrib.auth.admin import UserAdmin
+# from .models import *
+# # Register your models here.
+
+
+# class UserModel(UserAdmin):
+#     ordering = ('email',)
+
+
+# admin.site.register(CustomUser, UserModel)
+# admin.site.register(Staff)
+# admin.site.register(Student)
+# admin.site.register(Program)
+# admin.site.register(Book)
+# admin.site.register(IssuedBook)
+# admin.site.register(Library)
+# admin.site.register(Subject)
+# admin.site.register(Session)
+
+
+
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
-from .models import *
-# Register your models here.
+from .models import (
+    CustomUser, Admin, Program, Branch, Semester, Session,
+    Staff, Student, Subject, SubjectAllocation, Book, Library,
+    IssuedBook, EnrollmentHistory, Attendance, AttendanceReport,
+    LeaveReportStaff, LeaveReportStudent, FeedbackStaff, FeedbackStudent,
+    NotificationStaff, NotificationStudent, StudentResult,
+)
 
-
-class UserModel(UserAdmin):
-    ordering = ('email',)
-
-
-admin.site.register(CustomUser, UserModel)
+admin.site.register(CustomUser)
+admin.site.register(Admin)
+admin.site.register(Program)
+admin.site.register(Branch)
+admin.site.register(Semester)
+admin.site.register(Session)
 admin.site.register(Staff)
 admin.site.register(Student)
-admin.site.register(Course)
-admin.site.register(Book)
-admin.site.register(IssuedBook)
-admin.site.register(Library)
 admin.site.register(Subject)
-admin.site.register(Session)
+admin.site.register(SubjectAllocation)
+admin.site.register(Book)
+admin.site.register(Library)
+admin.site.register(IssuedBook)
+admin.site.register(EnrollmentHistory)
+admin.site.register(Attendance)
+admin.site.register(AttendanceReport)
+admin.site.register(LeaveReportStaff)
+admin.site.register(LeaveReportStudent)
+admin.site.register(FeedbackStaff)
+admin.site.register(FeedbackStudent)
+admin.site.register(NotificationStaff)
+admin.site.register(NotificationStudent)
+admin.site.register(StudentResult)

@@ -1,0 +1,54 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{page_title}}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+
+                <div class="card card-dark">
+                    <div class="card-header">
+                        <h3 class="card-title">{{page_title}}</h3>
+                    </div>
+
+                    <div class="card-body">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Program</th>
+                                    <th>Branch</th>
+                                    <th>Semester No.</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for semester in semesters %}
+                                <tr>
+                                    <td>{{ semester.id }}</td>
+                                    <td>{{ semester.program.name }}</td>
+                                    <td>{{ semester.branch.name|default:"—" }}</td>
+                                    <td>{{ semester.number }}</td>
+                                    <td>
+                                        <a href="{% url 'edit_semester' semester.id %}" class="btn btn-info ">Edit</a>-
+                                        <a href="{% url 'delete_semester' semester.id %}" class="btn btn-danger">Delete</a>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="5">No semesters found</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

@@ -63,7 +63,7 @@ class StudentForm(CustomUserForm):
     class Meta(CustomUserForm.Meta):
         model = Student
         fields = CustomUserForm.Meta.fields + \
-            ['course', 'session']
+            ['roll_number','enrollment_number','program','branch','current_semester','session',]
 
 
 class AdminForm(CustomUserForm):
@@ -82,16 +82,16 @@ class StaffForm(CustomUserForm):
     class Meta(CustomUserForm.Meta):
         model = Staff
         fields = CustomUserForm.Meta.fields + \
-            ['course' ]
+            ['employee_id','designation','department']
 
 
-class CourseForm(FormSettings):
-    def __init__(self, *args, **kwargs):
-        super(CourseForm, self).__init__(*args, **kwargs)
+# class CourseForm(FormSettings):
+#     def __init__(self, *args, **kwargs):
+#         super(CourseForm, self).__init__(*args, **kwargs)
 
-    class Meta:
-        fields = ['name']
-        model = Course
+#     class Meta:
+#         fields = ['name']
+#         model = Course
 
 
 class SubjectForm(FormSettings):
@@ -101,7 +101,17 @@ class SubjectForm(FormSettings):
 
     class Meta:
         model = Subject
-        fields = ['name', 'staff', 'course']
+        fields = [
+            'semester',
+            'code',
+            'name',
+            'subject_type',
+            'credits',
+            'max_theory_marks',
+            'max_practical_marks',
+            'max_internal_marks',
+            'min_passing_theory_marks',
+            'min_passing_practical_marks',]
 
 
 class SessionForm(FormSettings):
@@ -167,7 +177,12 @@ class StudentEditForm(CustomUserForm):
 
     class Meta(CustomUserForm.Meta):
         model = Student
-        fields = CustomUserForm.Meta.fields 
+        fields = CustomUserForm.Meta.fields +["roll_number",
+            'enrollment_number',
+            'program',
+            'branch',
+            'current_semester',
+            'session',] 
 
 
 class StaffEditForm(CustomUserForm):
@@ -176,7 +191,10 @@ class StaffEditForm(CustomUserForm):
 
     class Meta(CustomUserForm.Meta):
         model = Staff
-        fields = CustomUserForm.Meta.fields
+        fields = CustomUserForm.Meta.fields+[ 
+            'employee_id',
+            'designation',
+            'department',]
 
 
 class EditResultForm(FormSettings):
@@ -189,7 +207,14 @@ class EditResultForm(FormSettings):
 
     class Meta:
         model = StudentResult
-        fields = ['session_year', 'subject', 'student', 'test', 'exam']
+        fields = [
+            'student',
+            'subject',
+            'session',
+            'internal_marks_obtained',
+            'theory_marks_obtained',
+            'practical_marks_obtained',
+            ]
 
 #todos
 # class TodoForm(forms.ModelForm):
@@ -200,11 +225,21 @@ class EditResultForm(FormSettings):
 #issue book
 
 class IssueBookForm(forms.Form):
-    isbn2 = forms.ModelChoiceField(queryset=models.Book.objects.all(), empty_label="Book Name [ISBN]", to_field_name="isbn", label="Book (Name and ISBN)")
-    name2 = forms.ModelChoiceField(queryset=models.Student.objects.all(), empty_label="Name ", to_field_name="", label="Student Details")
-    
-    isbn2.widget.attrs.update({'class': 'form-control'})
-    name2.widget.attrs.update({'class':'form-control'})
+    book = forms.ModelChoiceField(
+        queryset=Book.objects.all(),
+        label="Book"
+    )
+
+    student = forms.ModelChoiceField(
+        queryset=Student.objects.all(),
+        label="Student"
+    )
+
+    def __init__(self,*args,**kwargs):
+        super().__init__(*args,**kwargs)
+
+        for field in self.fields.values():
+            field.widget.attrs.update({"class":"form-control"})
 
 
 
@@ -212,19 +247,48 @@ class IssueBookForm(forms.Form):
 class BranchForm(forms.ModelForm):
     class Meta:
         model = Branch
-        fields = ['name', 'code']
+        fields = ['program','name', 'code']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             'code': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
 
-class CourseForm(forms.ModelForm):
+class ProgramForm(forms.ModelForm):
     class Meta:
-        model = Course
-        fields = ['name', 'code', 'branch']
+        model = Program
+        fields = ['name', 'program_type', 'duration_years','total_semesters',]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
             field.widget.attrs.update({'class': 'form-control'})
+
+class SemesterForm(FormSettings):
+
+    class Meta:
+        model = Semester
+        fields = [
+            "program",
+            "branch",
+            "number",
+        ]
+
+class SubjectAllocationForm(FormSettings):
+
+    class Meta:
+        model = SubjectAllocation
+        fields = [
+            "staff",
+            "subject",
+            "session",
+        ]
+class SubjectAllocationForm(FormSettings):
+
+    class Meta:
+        model = SubjectAllocation
+        fields = [
+            "staff",
+            "subject",
+            "session",
+        ]

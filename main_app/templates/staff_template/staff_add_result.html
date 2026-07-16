@@ -95,7 +95,12 @@ if (subject.length  == 0 || session.length == 0){
                         div_data += "<option value='" + json_data[key]['id'] + "'>" + json_data[key]['name'] + " </option>"
                     }
                     div_data += "</select></div>"
-                    div_data += "<div class='form-group row'> <div class='col-md-6'> <label> Test Score </label> <input class='form-control' name='test' placeholder='Test Score' max='40' min='0' required type='number' /></div><div class='col-md-6'><label> Exam Score </label>  <input class='form-control' placeholder='Exam Score'  name='exam' max='60' min='0' required type='number' /> </div></div><div class='form-group'><button id='save_attendance' class='btn btn-success' type='submit'>Save Result</button></div></div>"
+                    div_data += "<div class='form-group row'>"
+                    div_data += "<div class='col-md-4'><label>Internal Marks</label><input class='form-control' name='internal_marks_obtained' placeholder='Internal Marks' min='0' required type='number' step='0.01' /></div>"
+                    div_data += "<div class='col-md-4'><label>Theory Marks</label><input class='form-control' name='theory_marks_obtained' placeholder='Theory Marks' min='0' required type='number' step='0.01' /></div>"
+                    div_data += "<div class='col-md-4'><label>Practical Marks</label><input class='form-control' name='practical_marks_obtained' placeholder='Practical Marks' min='0' required type='number' step='0.01' /></div>"
+                    div_data += "</div>"
+                    div_data += "<div class='form-group'><button id='save_result' class='btn btn-success' type='submit'>Save Result</button></div>"
                     $("#student_data").html(div_data)
                 }
             }).fail(function (response) {

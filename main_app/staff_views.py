@@ -12,22 +12,53 @@ from .models import *
 from . import forms, models
 from datetime import date
 
+# def staff_home(request):
+#     staff = get_object_or_404(Staff, admin=request.user)
+#     total_students = Student.objects.filter(course=staff.course).count()
+#     total_leave = LeaveReportStaff.objects.filter(staff=staff).count()
+#     subjects = Subject.objects.filter(staff=staff)
+#     total_subject = subjects.count()
+#     attendance_list = Attendance.objects.filter(subject__in=subjects)
+#     total_attendance = attendance_list.count()
+#     attendance_list = []
+#     subject_list = []
+#     for subject in subjects:
+#         attendance_count = Attendance.objects.filter(subject=subject).count()
+#         subject_list.append(subject.name)
+#         attendance_list.append(attendance_count)
+#     context = {
+#         'page_title': 'Staff Panel - ' + str(staff.admin.first_name) + ' ' + str(staff.admin.last_name[0]) + '' + ' (' + str(staff.course) + ')',
+#         'total_students': total_students,
+#         'total_attendance': total_attendance,
+#         'total_leave': total_leave,
+#         'total_subject': total_subject,
+#         'subject_list': subject_list,
+#         'attendance_list': attendance_list
+#     }
+#     return render(request, "staff_template/erpnext_staff_home.html", context)
 def staff_home(request):
     staff = get_object_or_404(Staff, admin=request.user)
-    total_students = Student.objects.filter(course=staff.course).count()
-    total_leave = LeaveReportStaff.objects.filter(staff=staff).count()
-    subjects = Subject.objects.filter(staff=staff)
+    subjects = Subject.objects.filter(allocations__staff=staff).distinct()
     total_subject = subjects.count()
-    attendance_list = Attendance.objects.filter(subject__in=subjects)
-    total_attendance = attendance_list.count()
+
+    # Students taught by this staff = students whose current_semester matches
+    # any semester this staff has an allocated subject in
+    semesters = subjects.values_list('semester', flat=True).distinct()
+    total_students = Student.objects.filter(current_semester__in=semesters).count()
+
+    total_leave = LeaveReportStaff.objects.filter(staff=staff).count()
+    attendance_list_qs = Attendance.objects.filter(subject__in=subjects)
+    total_attendance = attendance_list_qs.count()
+
     attendance_list = []
     subject_list = []
     for subject in subjects:
         attendance_count = Attendance.objects.filter(subject=subject).count()
         subject_list.append(subject.name)
         attendance_list.append(attendance_count)
+
     context = {
-        'page_title': 'Staff Panel - ' + str(staff.admin.first_name) + ' ' + str(staff.admin.last_name[0]) + '' + ' (' + str(staff.course) + ')',
+        'page_title': 'Staff Panel - ' + str(staff.admin.first_name) + ' ' + str(staff.admin.last_name) + ' (' + str(staff.department) + ')',
         'total_students': total_students,
         'total_attendance': total_attendance,
         'total_leave': total_leave,
@@ -37,18 +68,49 @@ def staff_home(request):
     }
     return render(request, "staff_template/erpnext_staff_home.html", context)
 
-
 def staff_take_attendance(request):
     staff = get_object_or_404(Staff, admin=request.user)
-    subjects = Subject.objects.filter(staff_id=staff)
+    subjects = Subject.objects.filter(allocations__staff=staff).distinct()
     sessions = Session.objects.all()
     context = {
         'subjects': subjects,
         'sessions': sessions,
         'page_title': 'Take Attendance'
     }
-
     return render(request, 'staff_template/staff_take_attendance.html', context)
+
+
+def staff_update_attendance(request):
+    staff = get_object_or_404(Staff, admin=request.user)
+    subjects = Subject.objects.filter(allocations__staff=staff).distinct()
+    sessions = Session.objects.all()
+    context = {
+        'subjects': subjects,
+        'sessions': sessions,
+        'page_title': 'Update Attendance'
+    }
+    return render(request, 'staff_template/staff_update_attendance.html', context)
+
+
+# @csrf_exempt
+# def get_students(request):
+#     subject_id = request.POST.get('subject')
+#     session_id = request.POST.get('session')
+#     try:
+#         subject = get_object_or_404(Subject, id=subject_id)
+#         session = get_object_or_404(Session, id=session_id)
+#         students = Student.objects.filter(
+#             course_id=subject.course.id, session=session)
+#         student_data = []
+#         for student in students:
+#             data = {
+#                     "id": student.id,
+#                     "name": student.admin.last_name + " " + student.admin.first_name
+#                     }
+#             student_data.append(data)
+#         return JsonResponse(json.dumps(student_data), content_type='application/json', safe=False)
+#     except Exception as e:
+#         return e
 
 
 @csrf_exempt
@@ -59,17 +121,17 @@ def get_students(request):
         subject = get_object_or_404(Subject, id=subject_id)
         session = get_object_or_404(Session, id=session_id)
         students = Student.objects.filter(
-            course_id=subject.course.id, session=session)
+            current_semester=subject.semester, session=session)
         student_data = []
         for student in students:
             data = {
-                    "id": student.id,
-                    "name": student.admin.last_name + " " + student.admin.first_name
-                    }
+                "id": student.admin.id,
+                "name": student.admin.last_name + " " + student.admin.first_name
+            }
             student_data.append(data)
         return JsonResponse(json.dumps(student_data), content_type='application/json', safe=False)
     except Exception as e:
-        return e
+        return HttpResponse(json.dumps([]), content_type='application/json', safe=False)
 
 
 @csrf_exempt
@@ -95,17 +157,17 @@ def save_attendance(request):
     return HttpResponse("OK")
 
 
-def staff_update_attendance(request):
-    staff = get_object_or_404(Staff, admin=request.user)
-    subjects = Subject.objects.filter(staff_id=staff)
-    sessions = Session.objects.all()
-    context = {
-        'subjects': subjects,
-        'sessions': sessions,
-        'page_title': 'Update Attendance'
-    }
+# def staff_update_attendance(request):
+#     staff = get_object_or_404(Staff, admin=request.user)
+#     subjects = Subject.objects.filter(staff_id=staff)
+#     sessions = Session.objects.all()
+#     context = {
+#         'subjects': subjects,
+#         'sessions': sessions,
+#         'page_title': 'Update Attendance'
+#     }
 
-    return render(request, 'staff_template/staff_update_attendance.html', context)
+#     return render(request, 'staff_template/staff_update_attendance.html', context)
 
 
 @csrf_exempt
@@ -254,9 +316,43 @@ def staff_view_notification(request):
     return render(request, "staff_template/staff_view_notification.html", context)
 
 
+# def staff_add_result(request):
+#     staff = get_object_or_404(Staff, admin=request.user)
+#     subjects = Subject.objects.filter(staff=staff)
+#     sessions = Session.objects.all()
+#     context = {
+#         'page_title': 'Result Upload',
+#         'subjects': subjects,
+#         'sessions': sessions
+#     }
+#     if request.method == 'POST':
+#         try:
+#             student_id = request.POST.get('student_list')
+#             subject_id = request.POST.get('subject')
+#             test = request.POST.get('test')
+#             exam = request.POST.get('exam')
+#             student = get_object_or_404(Student, id=student_id)
+#             subject = get_object_or_404(Subject, id=subject_id)
+#             try:
+#                 data = StudentResult.objects.get(
+#                     student=student, subject=subject)
+#                 data.exam = exam
+#                 data.test = test
+#                 data.save()
+#                 messages.success(request, "Scores Updated")
+#             except:
+#                 result = StudentResult(student=student, subject=subject, test=test, exam=exam)
+#                 result.save()
+#                 messages.success(request, "Scores Saved")
+#         except Exception as e:
+#             messages.warning(request, "Error Occured While Processing Form")
+#     return render(request, "staff_template/staff_add_result.html", context)
+
+
+
 def staff_add_result(request):
     staff = get_object_or_404(Staff, admin=request.user)
-    subjects = Subject.objects.filter(staff=staff)
+    subjects = Subject.objects.filter(allocations__staff=staff).distinct()
     sessions = Session.objects.all()
     context = {
         'page_title': 'Result Upload',
@@ -267,24 +363,44 @@ def staff_add_result(request):
         try:
             student_id = request.POST.get('student_list')
             subject_id = request.POST.get('subject')
-            test = request.POST.get('test')
-            exam = request.POST.get('exam')
+            session_id = request.POST.get('session')
+            internal_marks = request.POST.get('internal_marks_obtained') or 0
+            theory_marks = request.POST.get('theory_marks_obtained') or 0
+            practical_marks = request.POST.get('practical_marks_obtained') or 0
+
             student = get_object_or_404(Student, id=student_id)
             subject = get_object_or_404(Subject, id=subject_id)
-            try:
-                data = StudentResult.objects.get(
-                    student=student, subject=subject)
-                data.exam = exam
-                data.test = test
-                data.save()
-                messages.success(request, "Scores Updated")
-            except:
-                result = StudentResult(student=student, subject=subject, test=test, exam=exam)
-                result.save()
-                messages.success(request, "Scores Saved")
+            session = get_object_or_404(Session, id=session_id)
+
+            data, created = StudentResult.objects.update_or_create(
+                student=student, subject=subject, session=session,
+                defaults={
+                    'internal_marks_obtained': internal_marks,
+                    'theory_marks_obtained': theory_marks,
+                    'practical_marks_obtained': practical_marks,
+                }
+            )
+            messages.success(request, "Scores Saved" if created else "Scores Updated")
         except Exception as e:
-            messages.warning(request, "Error Occured While Processing Form")
+            messages.warning(request, "Error Occured While Processing Form: " + str(e))
     return render(request, "staff_template/staff_add_result.html", context)
+
+# @csrf_exempt
+# def fetch_student_result(request):
+#     try:
+#         subject_id = request.POST.get('subject')
+#         student_id = request.POST.get('student')
+#         student = get_object_or_404(Student, id=student_id)
+#         subject = get_object_or_404(Subject, id=subject_id)
+#         result = StudentResult.objects.get(student=student, subject=subject)
+#         result_data = {
+#             'exam': result.exam,
+#             'test': result.test
+#         }
+#         return HttpResponse(json.dumps(result_data))
+#     except Exception as e:
+#         return HttpResponse('False')
+
 
 
 @csrf_exempt
@@ -292,12 +408,15 @@ def fetch_student_result(request):
     try:
         subject_id = request.POST.get('subject')
         student_id = request.POST.get('student')
+        session_id = request.POST.get('session')
         student = get_object_or_404(Student, id=student_id)
         subject = get_object_or_404(Subject, id=subject_id)
-        result = StudentResult.objects.get(student=student, subject=subject)
+        session = get_object_or_404(Session, id=session_id)
+        result = StudentResult.objects.get(student=student, subject=subject, session=session)
         result_data = {
-            'exam': result.exam,
-            'test': result.test
+            'internal_marks_obtained': result.internal_marks_obtained,
+            'theory_marks_obtained': result.theory_marks_obtained,
+            'practical_marks_obtained': result.practical_marks_obtained,
         }
         return HttpResponse(json.dumps(result_data))
     except Exception as e:
@@ -324,34 +443,69 @@ def add_book(request):
 #issue book
 
 
+# def issue_book(request):
+#     form = forms.IssueBookForm()
+#     if request.method == "POST":
+#         form = forms.IssueBookForm(request.POST)
+#         if form.is_valid():
+#             obj = models.IssuedBook()
+#             obj.student_id = request.POST['name2']
+#             obj.isbn = request.POST['isbn2']
+#             obj.save()
+#             alert = True
+#             return render(request, "staff_template/issue_book.html", {'obj':obj, 'alert':alert})
+#     return render(request, "staff_template/issue_book.html", {'form':form})
+
+
+
 def issue_book(request):
     form = forms.IssueBookForm()
     if request.method == "POST":
         form = forms.IssueBookForm(request.POST)
         if form.is_valid():
             obj = models.IssuedBook()
-            obj.student_id = request.POST['name2']
-            obj.isbn = request.POST['isbn2']
+            obj.student = form.cleaned_data.get('student')
+            obj.book = form.cleaned_data.get('book')
             obj.save()
             alert = True
-            return render(request, "staff_template/issue_book.html", {'obj':obj, 'alert':alert})
-    return render(request, "staff_template/issue_book.html", {'form':form})
+            return render(request, "staff_template/issue_book.html", {'obj': obj, 'alert': alert})
+        else:
+            messages.error(request, "Form has errors!")
+    return render(request, "staff_template/issue_book.html", {'form': form})
+
+# def view_issued_book(request):
+#     issuedBooks = IssuedBook.objects.all()
+#     details = []
+#     for i in issuedBooks:
+#         days = (date.today()-i.issued_date)
+#         d=days.days
+#         fine=0
+#         if d>14:
+#             day=d-14
+#             fine=day*5
+#         books = list(models.Book.objects.filter(isbn=i.isbn))
+#         # students = list(models.Student.objects.filter(admin=i.admin))
+#         i=0
+#         for l in books:
+#             t=(books[i].name,books[i].isbn,issuedBooks[0].issued_date,issuedBooks[0].expiry_date,fine)
+#             i=i+1
+#             details.append(t)
+#     return render(request, "staff_template/view_issued_book.html", {'issuedBooks':issuedBooks, 'details':details})
+
 
 def view_issued_book(request):
-    issuedBooks = IssuedBook.objects.all()
+    issuedBooks = IssuedBook.objects.select_related('student', 'book').all()
     details = []
-    for i in issuedBooks:
-        days = (date.today()-i.issued_date)
-        d=days.days
-        fine=0
-        if d>14:
-            day=d-14
-            fine=day*5
-        books = list(models.Book.objects.filter(isbn=i.isbn))
-        # students = list(models.Student.objects.filter(admin=i.admin))
-        i=0
-        for l in books:
-            t=(books[i].name,books[i].isbn,issuedBooks[0].issued_date,issuedBooks[0].expiry_date,fine)
-            i=i+1
-            details.append(t)
-    return render(request, "staff_template/view_issued_book.html", {'issuedBooks':issuedBooks, 'details':details})
+    for issued in issuedBooks:
+        days = (date.today() - issued.issued_date).days
+        fine = 0
+        if days > 14:
+            fine = (days - 14) * 5
+        details.append((
+            issued.book.name,
+            issued.book.isbn,
+            issued.issued_date,
+            issued.expiry_date,
+            fine
+        ))
+    return render(request, "staff_template/view_issued_book.html", {'issuedBooks': issuedBooks, 'details': details})
