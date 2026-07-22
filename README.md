@@ -11,7 +11,7 @@
 
 **EduMa** streamlines everything a college needs to run day-to-day — student records, staff operations, attendance, results, leave management, and feedback — inside one clean, role-based platform.
 
-[Live Demo](https://syncx.pythonanywhere.com) • [Report Bug](../../issues) • [Request Feature](../../issues)
+
 
 </div>
 
@@ -88,7 +88,7 @@
 |---|---|
 | **Backend** | Python, Django Framework |
 | **Frontend** | HTML5, CSS3, JavaScript, Bootstrap |
-| **Database** | SQLite (development), PostgreSQL (production-ready) |
+| **Database** | SQLite (development), PostgreSQL (supported with configuration) |
 | **Authentication** | Django Auth (custom email backend) + Google reCAPTCHA |
 | **Deployment** | PythonAnywhere / Procfile-based hosting |
 
@@ -97,7 +97,7 @@
 ## 🗂 Project Structure
 
 ```
-College-ERP/
+College-ERP-Management/
 │
 ├── college_management_system/      # Django project configuration
 │   ├── settings.py                 # App settings, database, static files
@@ -173,7 +173,7 @@ EduMa uses a **custom authentication backend** (`EmailBackend.py`) that allows u
 
 ### Prerequisites
 - ✅ [Git](https://git-scm.com/)
-- ✅ [Python 3.x](https://www.python.org/downloads/)
+- ✅ [Python 3.11](https://www.python.org/downloads/)
 - ✅ [pip](https://pip.pypa.io/en/stable/installing/)
 
 ### 1️⃣ Clone the Repository
