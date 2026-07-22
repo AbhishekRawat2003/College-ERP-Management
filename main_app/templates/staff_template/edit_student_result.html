@@ -49,20 +49,23 @@
         $("#id_subject").change(function () {
             fetchStudents();
             });
-            $("#id_session_year").change(function () {
+            $("#id_session").change(function () {
                 fetchStudents();
                 });
    $("#id_student").change(function () {
     fetch_student_result();
                 });
-                $("#id_exam").hide()
-                $("#id_test").hide()
+                $("#id_internal_marks_obtained").hide()
+                $("#id_theory_marks_obtained").hide()
+                $("#id_practical_marks_obtained").hide()
                 $("#update_result").hide()
-                $('label[for="id_test"]').hide();
-                $('label[for="id_exam"]').hide();
+                $('label[for="id_internal_marks_obtained"]').hide();
+                $('label[for="id_theory_marks_obtained"]').hide();
+                $('label[for="id_practical_marks_obtained"]').hide();
+
         function fetchStudents(){
             var subject = $("#id_subject").val()
-            var session = $("#id_session_year").val()
+            var session = $("#id_session").val()
             $("#id_student").html(null)
             if (session.length  == 0 || subject.length == 0 || session < 1 || subject < 1){
                 return false;
@@ -95,13 +98,17 @@
                function fetch_student_result(){
                 var student = $("#id_student").val()
                 var subject = $("#id_subject").val()
-                $("#id_test").val(null)
-                $("#id_exam").val(null)
-                $("#id_exam").hide()
+                var session = $("#id_session").val()
+                $("#id_internal_marks_obtained").val(null)
+                $("#id_theory_marks_obtained").val(null)
+                $("#id_practical_marks_obtained").val(null)
+                $("#id_internal_marks_obtained").hide()
+                $("#id_theory_marks_obtained").hide()
+                $("#id_practical_marks_obtained").hide()
                 $("#update_result").hide()
-                $("#id_test").hide()
-                $('label[for="id_test"]').hide();
-                $('label[for="id_exam"]').hide();
+                $('label[for="id_internal_marks_obtained"]').hide();
+                $('label[for="id_theory_marks_obtained"]').hide();
+                $('label[for="id_practical_marks_obtained"]').hide();
                 if (student.length  == 0 || subject.length == 0 || student < 1 || subject < 1){
                     return false;
                 }
@@ -110,7 +117,8 @@
                     type: 'POST',
                     data: {
                         subject: subject,
-                        student:student
+                        student:student,
+                        session:session
                     }
                 }).done(function (response) {
                     if (response == 'False') {
@@ -118,13 +126,16 @@
                     } else {
                         var json_data = JSON.parse(response)
                         
-                            $("#id_test").val(json_data['test'])
-                            $("#id_exam").val(json_data['exam'])
-                            $("#id_exam").show()
-                            $("#id_test").show()
+                            $("#id_internal_marks_obtained").val(json_data['internal_marks_obtained'])
+                            $("#id_theory_marks_obtained").val(json_data['theory_marks_obtained'])
+                            $("#id_practical_marks_obtained").val(json_data['practical_marks_obtained'])
+                            $("#id_internal_marks_obtained").show()
+                            $("#id_theory_marks_obtained").show()
+                            $("#id_practical_marks_obtained").show()
                             $("#update_result").show()
-                            $('label[for="id_test"]').show();
-                            $('label[for="id_exam"]').show();
+                            $('label[for="id_internal_marks_obtained"]').show();
+                            $('label[for="id_theory_marks_obtained"]').show();
+                            $('label[for="id_practical_marks_obtained"]').show();
 
                     }
                 }).fail(function (response) {

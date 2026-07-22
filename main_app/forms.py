@@ -36,6 +36,21 @@ class CustomUserForm(FormSettings):
             if self.instance.pk is not None:
                 self.fields['password'].widget.attrs['placeholder'] = "Fill this only if you wish to update password"
 
+    # def clean_email(self, *args, **kwargs):
+    #     formEmail = self.cleaned_data['email'].lower()
+    #     if self.instance.pk is None:  # Insert
+    #         if CustomUser.objects.filter(email=formEmail).exists():
+    #             raise forms.ValidationError(
+    #                 "The given email is already registered")
+    #     else:  # Update
+    #         dbEmail = self.Meta.model.objects.get(
+    #             id=self.instance.pk).admin.email.lower()
+    #         if dbEmail != formEmail:  # There has been changes
+    #             if CustomUser.objects.filter(email=formEmail).exists():
+    #                 raise forms.ValidationError("The given email is already registered")
+
+    #     return formEmail
+
     def clean_email(self, *args, **kwargs):
         formEmail = self.cleaned_data['email'].lower()
         if self.instance.pk is None:  # Insert
@@ -44,13 +59,13 @@ class CustomUserForm(FormSettings):
                     "The given email is already registered")
         else:  # Update
             dbEmail = self.Meta.model.objects.get(
-                id=self.instance.pk).admin.email.lower()
+                pk=self.instance.pk).admin.email.lower()
             if dbEmail != formEmail:  # There has been changes
                 if CustomUser.objects.filter(email=formEmail).exists():
                     raise forms.ValidationError("The given email is already registered")
-
+    
         return formEmail
-
+    
     class Meta:
         model = CustomUser
         fields = ['first_name', 'last_name', 'email', 'gender',  'password','profile_pic', 'address' ]
@@ -198,10 +213,6 @@ class StaffEditForm(CustomUserForm):
 
 
 class EditResultForm(FormSettings):
-    session_list = Session.objects.all()
-    session_year = forms.ModelChoiceField(
-        label="Session Year", queryset=session_list, required=True)
-
     def __init__(self, *args, **kwargs):
         super(EditResultForm, self).__init__(*args, **kwargs)
 

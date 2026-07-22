@@ -44,8 +44,7 @@
 
         <h6 class="nav-section-title">Academic Management</h6>
 
-        <!-- ADDED: Branch submenu, placed before Courses since a Course
-             now depends on a Branch (course.branch FK). -->
+        <!-- Branch submenu -->
         <div class="nav-item has-submenu {% if 'branch' in request.path %}open{% endif %}">
             <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-sitemap"></i>
@@ -67,24 +66,48 @@
                 </div>
             </div>
         </div>
-        
-        <div class="nav-item has-submenu {% if 'course' in request.path %}open{% endif %}">
+
+        <!-- Program submenu (replaces old Course submenu) -->
+        <div class="nav-item has-submenu {% if 'program' in request.path %}open{% endif %}">
             <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-graduation-cap"></i>
-                <span class="nav-text">Courses</span>
+                <span class="nav-text">Programs</span>
                 <i class="nav-arrow fas fa-chevron-right"></i>
             </a>
             <div class="nav-submenu">
                 <div class="nav-item">
-                    {% url 'add_course' as add_course %}
-                    <a href="{{ add_course }}" class="nav-link {% if add_course == request.path %}active{% endif %}">
-                        <span class="nav-text">Add Course</span>
+                    {% url 'add_program' as add_program %}
+                    <a href="{{ add_program }}" class="nav-link {% if add_program == request.path %}active{% endif %}">
+                        <span class="nav-text">Add Program</span>
                     </a>
                 </div>
                 <div class="nav-item">
-                    {% url 'manage_course' as manage_course %}
-                    <a href="{{ manage_course }}" class="nav-link {% if manage_course == request.path or 'edit_course' in request.path %}active{% endif %}">
-                        <span class="nav-text">Manage Courses</span>
+                    {% url 'manage_program' as manage_program %}
+                    <a href="{{ manage_program }}" class="nav-link {% if manage_program == request.path or 'edit_program' in request.path %}active{% endif %}">
+                        <span class="nav-text">Manage Programs</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Semester submenu (new) -->
+        <div class="nav-item has-submenu {% if 'semester' in request.path %}open{% endif %}">
+            <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-layer-group"></i>
+                <span class="nav-text">Semesters</span>
+                <i class="nav-arrow fas fa-chevron-right"></i>
+            </a>
+            <div class="nav-submenu">
+                <div class="nav-item">
+                    {% url 'add_semester' as add_semester %}
+                    <a href="{{ add_semester }}" class="nav-link {% if add_semester == request.path %}active{% endif %}">
+                        <span class="nav-text">Add Semester</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    {% url 'manage_semester' as manage_semester %}
+                    <a href="{{ manage_semester }}" class="nav-link {% if manage_semester == request.path or 'edit_semester' in request.path %}active{% endif %}">
+                        <span class="nav-text">Manage Semesters</span>
                     </a>
                 </div>
             </div>
@@ -107,6 +130,29 @@
                     {% url 'manage_subject' as manage_subject %}
                     <a href="{{ manage_subject }}" class="nav-link {% if manage_subject == request.path or 'edit_subject' in request.path %}active{% endif %}">
                         <span class="nav-text">Manage Subjects</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Subject Allocation submenu (new) -->
+        <div class="nav-item has-submenu {% if 'subject_allocation' in request.path %}open{% endif %}">
+            <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-chalkboard-teacher"></i>
+                <span class="nav-text">Subject Allocation</span>
+                <i class="nav-arrow fas fa-chevron-right"></i>
+            </a>
+            <div class="nav-submenu">
+                <div class="nav-item">
+                    {% url 'add_subject_allocation' as add_subject_allocation %}
+                    <a href="{{ add_subject_allocation }}" class="nav-link {% if add_subject_allocation == request.path %}active{% endif %}">
+                        <span class="nav-text">Allocate Subject</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    {% url 'manage_subject_allocation' as manage_subject_allocation %}
+                    <a href="{{ manage_subject_allocation }}" class="nav-link {% if manage_subject_allocation == request.path or 'edit_subject_allocation' in request.path %}active{% endif %}">
+                        <span class="nav-text">Manage Allocations</span>
                     </a>
                 </div>
             </div>

@@ -122,9 +122,9 @@ def admin_home(request):
 
     students = Student.objects.all()
     for student in students:
-        attendance = AttendanceReport.objects.filter(student_id=student.id, status=True).count()
-        absent = AttendanceReport.objects.filter(student_id=student.id, status=False).count()
-        leave = LeaveReportStudent.objects.filter(student_id=student.id, status=1).count()
+        attendance = AttendanceReport.objects.filter(student=student, status=True).count()
+        absent = AttendanceReport.objects.filter(student=student, status=False).count()
+        leave = LeaveReportStudent.objects.filter(student=student, status=1).count()
         student_attendance_present_list.append(attendance)
         student_attendance_leave_list.append(leave + absent)
         student_name_list.append(student.admin.first_name)
