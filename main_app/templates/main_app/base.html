@@ -7,22 +7,25 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>{% block title %}College ERP - Dashboard{% endblock title %}</title>
-    
+
     <!-- Favicon -->
     <link rel="shortcut icon" href="{% static '/image/favicon1.ico' %}">
-    
+
     <!-- ERPNext Style CSS -->
     <link rel="stylesheet" href="{% static 'dist/css/erpnext-style.css' %}">
-    
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
-    
+
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    
+
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     {% block custom_css %}{% endblock custom_css %}
 </head>
 
@@ -33,11 +36,12 @@
             <button class="navbar-toggle" onclick="toggleSidebar()">
                 <i class="fas fa-bars"></i>
             </button>
-            <a href="{% if user.user_type == '1' %}{% url 'admin_home' %}{% elif user.user_type == '2' %}{% url 'staff_home' %}{% else %}{% url 'student_home' %}{% endif %}" class="navbar-brand">
+            <a href="{% if user.user_type == '1' %}{% url 'admin_home' %}{% elif user.user_type == '2' %}{% url 'staff_home' %}{% else %}{% url 'student_home' %}{% endif %}"
+                class="navbar-brand">
                 College ERP
             </a>
         </div>
-        
+
         <div class="navbar-user">
             <!-- Dark Mode Toggle -->
             <label class="theme-toggle" for="theme-switch">
@@ -47,7 +51,7 @@
                     <i class="fas fa-moon icon-dark"></i>
                 </span>
             </label>
-            
+
             <!-- Logout Button -->
             <a href="{% url 'user_logout' %}" class="btn btn-outline-primary btn-sm logout-btn">
                 <i class="fas fa-sign-out-alt"></i>
@@ -67,14 +71,15 @@
         <div class="page-header">
             <h1 class="page-title">{% block page_title %}Dashboard{% endblock page_title %}</h1>
             {% if page_subtitle %}
-                <p class="page-subtitle">{{ page_subtitle }}</p>
+            <p class="page-subtitle">{{ page_subtitle }}</p>
             {% endif %}
-            
+
             <!-- Breadcrumb -->
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
-                        <a href="{% if user.user_type == '1' %}{% url 'admin_home' %}{% elif user.user_type == '2' %}{% url 'staff_home' %}{% else %}{% url 'student_home' %}{% endif %}">
+                        <a
+                            href="{% if user.user_type == '1' %}{% url 'admin_home' %}{% elif user.user_type == '2' %}{% url 'staff_home' %}{% else %}{% url 'student_home' %}{% endif %}">
                             <i class="fas fa-home"></i> Home
                         </a>
                     </li>
@@ -85,14 +90,13 @@
 
         <!-- Messages -->
         {% if messages %}
-            <div class="messages-container">
+        <script>
+            var djangoMessages = [
                 {% for message in messages %}
-                    <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
-                        {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                {% endfor %}
-            </div>
+            { text: "{{ message|escapejs }}", tags: "{{ message.tags|default:'info' }}" } {% if not forloop.last %}, {% endif %}
+            {% endfor %}
+    ];
+        </script>
         {% endif %}
 
         <!-- Main Content Area -->
@@ -100,15 +104,15 @@
             {% block content %}{% endblock content %}
         </div>
     </main>
-   
+
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
-    
+
     <script>
         // Sidebar toggle functionality
         let isSidebarOpen = false;
-        
+
         function toggleSidebar() {
             const body = document.body;
             if (window.innerWidth <= 768) {
@@ -135,9 +139,9 @@
             // Store state in localStorage
             localStorage.setItem('sidebarOpen', isSidebarOpen);
         }
-        
+
         // Restore sidebar state on page load
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const stored = localStorage.getItem('sidebarOpen');
             if (window.innerWidth <= 768) {
                 if (stored === 'true') {
@@ -161,9 +165,9 @@
                 }
             }
         });
-        
+
         // Handle window resize
-        window.addEventListener('resize', function() {
+        window.addEventListener('resize', function () {
             if (window.innerWidth <= 768) {
                 if (!isSidebarOpen) {
                     document.body.classList.add('sidebar-collapsed');
@@ -182,22 +186,22 @@
                 }
             }
         });
-        
+
         // Navigation menu toggle functionality
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const navItems = document.querySelectorAll('.nav-item.has-submenu');
-            
+
             navItems.forEach(item => {
                 const link = item.querySelector('.nav-link');
                 const submenu = item.querySelector('.nav-submenu');
-                
+
                 if (link && submenu) {
-                    link.addEventListener('click', function(e) {
+                    link.addEventListener('click', function (e) {
                         e.preventDefault();
-                        
+
                         // Toggle current item
                         item.classList.toggle('open');
-                        
+
                         // Close other open items
                         navItems.forEach(otherItem => {
                             if (otherItem !== item && otherItem.classList.contains('open')) {
@@ -207,12 +211,12 @@
                     });
                 }
             });
-            
+
             // Auto-close sidebar on mobile when clicking navigation links
             const sidebarLinks = document.querySelectorAll('.erpnext-sidebar a[href]:not([href="#"]):not([href="javascript:void(0)"])');
-            
+
             sidebarLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
+                link.addEventListener('click', function (e) {
                     // Check if we're on mobile (768px or less)
                     if (window.innerWidth <= 768) {
                         // Close the sidebar
@@ -225,42 +229,42 @@
                 });
             });
         });
-        
-        // Auto-hide alerts after 5 seconds
-        document.addEventListener('DOMContentLoaded', function() {
-            const alerts = document.querySelectorAll('.alert:not(.alert-permanent)');
-            alerts.forEach(alert => {
-                setTimeout(() => {
-                    const closeBtn = alert.querySelector('.btn-close');
-                    if (closeBtn) {
-                        closeBtn.click();
-                    }
-                }, 5000);
-            });
-        });
-        
+
+        // // Auto-hide alerts after 5 seconds
+        // document.addEventListener('DOMContentLoaded', function () {
+        //     const alerts = document.querySelectorAll('.alert:not(.alert-permanent)');
+        //     alerts.forEach(alert => {
+        //         setTimeout(() => {
+        //             const closeBtn = alert.querySelector('.btn-close');
+        //             if (closeBtn) {
+        //                 closeBtn.click();
+        //             }
+        //         }, 5000);
+        //     });
+        // });
+
         // Dark mode toggle functionality
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const themeToggle = document.getElementById('theme-switch');
             const body = document.body;
-            
+
             // Initialize global chart arrays
             window.chartInstances = window.chartInstances || [];
             window.chartCreators = window.chartCreators || [];
             console.log('Base template initialized chart arrays');
-            
+
             // Simple function to register chart recreation callback
-            window.registerChartRecreation = function(callback) {
+            window.registerChartRecreation = function (callback) {
                 console.log('Registering chart recreation callback');
                 window.chartCreators.push(callback);
             };
-            
+
             // Global function to recreate all charts with new theme colors
-            window.recreateAllCharts = function() {
+            window.recreateAllCharts = function () {
                 console.log('Recreating all charts with new theme colors');
                 console.log('Chart instances:', window.chartInstances ? window.chartInstances.length : 'undefined');
                 console.log('Chart creators:', window.chartCreators ? window.chartCreators.length : 'undefined');
-                
+
                 if (window.chartInstances) {
                     console.log('Destroying', window.chartInstances.length, 'existing charts');
                     // Destroy existing charts
@@ -270,11 +274,11 @@
                             chart.destroy();
                         }
                     });
-                    
+
                     // Clear the instances array
                     window.chartInstances = [];
                 }
-                
+
                 if (window.chartCreators) {
                     console.log('Recreating', window.chartCreators.length, 'charts');
                     // Recreate charts using stored creators
@@ -297,17 +301,17 @@
                     const isDarkMode = body.classList.contains('dark-mode');
                     const textColor = isDarkMode ? '#e0e0e0' : '#262626';
                     const gridColor = isDarkMode ? '#404040' : '#f1f3f4';
-                    
+
                     Chart.defaults.color = textColor;
                     Chart.defaults.borderColor = isDarkMode ? '#404040' : '#d1d8dd';
                     Chart.defaults.backgroundColor = isDarkMode ? '#2d2d2d' : '#ffffff';
-                    
+
                     // Update global legend defaults
                     Chart.defaults.plugins = Chart.defaults.plugins || {};
                     Chart.defaults.plugins.legend = Chart.defaults.plugins.legend || {};
                     Chart.defaults.plugins.legend.labels = Chart.defaults.plugins.legend.labels || {};
                     Chart.defaults.plugins.legend.labels.color = textColor;
-                    
+
                     // Update grid colors
                     if (Chart.defaults.scales) {
                         Chart.defaults.scales.linear = Chart.defaults.scales.linear || {};
@@ -315,14 +319,14 @@
                         Chart.defaults.scales.linear.grid.color = gridColor;
                         Chart.defaults.scales.linear.ticks = Chart.defaults.scales.linear.ticks || {};
                         Chart.defaults.scales.linear.ticks.color = textColor;
-                        
+
                         Chart.defaults.scales.category = Chart.defaults.scales.category || {};
                         Chart.defaults.scales.category.grid = Chart.defaults.scales.category.grid || {};
                         Chart.defaults.scales.category.grid.color = gridColor;
                         Chart.defaults.scales.category.ticks = Chart.defaults.scales.category.ticks || {};
                         Chart.defaults.scales.category.ticks.color = textColor;
                     }
-                    
+
                     // Trigger chart updates if any charts exist
                     if (window.chartInstances) {
                         console.log('Updating', window.chartInstances.length, 'chart instances for theme change');
@@ -330,15 +334,15 @@
                             if (chart && typeof chart.update === 'function') {
                                 try {
                                     console.log('Updating chart', index, 'with legend color:', textColor);
-                                    
+
                                     // Ensure plugins object structure exists
                                     chart.options.plugins = chart.options.plugins || {};
                                     chart.options.plugins.legend = chart.options.plugins.legend || {};
                                     chart.options.plugins.legend.labels = chart.options.plugins.legend.labels || {};
-                                    
+
                                     // Update legend label colors
                                     chart.options.plugins.legend.labels.color = textColor;
-                                    
+
                                     // Update scales if they exist
                                     if (chart.options.scales) {
                                         Object.keys(chart.options.scales).forEach(scaleKey => {
@@ -353,10 +357,10 @@
                                             }
                                         });
                                     }
-                                    
+
                                     // Force immediate update with resize to ensure legend redraws
                                     chart.update('resize');
-                                    
+
                                     // Additional forced redraw after a small delay
                                     setTimeout(() => {
                                         if (chart && !chart.destroyed) {
@@ -364,14 +368,14 @@
                                             chart.update('active');
                                         }
                                     }, 100);
-                                    
+
                                     // Final update to ensure everything is rendered
                                     setTimeout(() => {
                                         if (chart && !chart.destroyed) {
                                             chart.render();
                                         }
                                     }, 200);
-                                    
+
                                 } catch (error) {
                                     console.warn('Error updating chart:', error);
                                 }
@@ -380,10 +384,10 @@
                     }
                 }
             }
-            
+
             // Check for saved theme preference or default to light mode
             const savedTheme = localStorage.getItem('theme') || 'light';
-            
+
             // Apply saved theme
             if (savedTheme === 'dark') {
                 body.classList.add('dark-mode');
@@ -392,14 +396,14 @@
                 body.classList.remove('dark-mode');
                 themeToggle.checked = false;
             }
-            
+
             // Initialize chart colors
             updateChartColors();
-            
+
             // Toggle theme on switch change
-            themeToggle.addEventListener('change', function() {
+            themeToggle.addEventListener('change', function () {
                 console.log('Theme toggle clicked, checked:', this.checked);
-                
+
                 if (this.checked) {
                     body.classList.add('dark-mode');
                     localStorage.setItem('theme', 'dark');
@@ -409,28 +413,28 @@
                     localStorage.setItem('theme', 'light');
                     console.log('Switched to light mode');
                 }
-                
+
                 // Immediate direct chart update
                 const updateChartsDirectly = () => {
                     console.log('Trying immediate direct chart update');
                     const canvases = document.querySelectorAll('canvas');
                     console.log('Found', canvases.length, 'canvas elements');
-                    
+
                     let updatedCharts = 0;
                     canvases.forEach((canvas, index) => {
                         const chart = Chart.getChart(canvas);
                         if (chart) {
                             console.log('Found chart on canvas', index, 'attempting immediate update');
-                            
+
                             const isDarkMode = document.body.classList.contains('dark-mode');
                             const textColor = isDarkMode ? '#e0e0e0' : '#262626';
                             const gridColor = isDarkMode ? '#404040' : '#f1f3f4';
-                            
+
                             // Update chart options
                             if (chart.options.plugins && chart.options.plugins.legend && chart.options.plugins.legend.labels) {
                                 chart.options.plugins.legend.labels.color = textColor;
                             }
-                            
+
                             if (chart.options.scales) {
                                 Object.keys(chart.options.scales).forEach(scaleKey => {
                                     const scale = chart.options.scales[scaleKey];
@@ -440,32 +444,32 @@
                                     }
                                 });
                             }
-                            
+
                             // Force immediate chart update
                             chart.update('none'); // Use 'none' for immediate update
                             updatedCharts++;
                             console.log('Immediately updated chart on canvas', index);
                         }
                     });
-                    
+
                     return updatedCharts;
                 };
-                
+
                 // Try immediate update first
                 const immediateUpdates = updateChartsDirectly();
-                
+
                 // If no charts were updated immediately, try the delayed approaches
                 if (immediateUpdates === 0) {
                     console.log('No charts updated immediately, trying delayed approaches');
-                    
+
                     setTimeout(() => {
                         console.log('About to update chart colors (delayed)');
                         updateChartColors();
-                        
+
                         // Try direct update again after a short delay
                         setTimeout(() => {
                             const delayedUpdates = updateChartsDirectly();
-                            
+
                             // If still no luck, try recreation approaches
                             if (delayedUpdates === 0) {
                                 if (typeof window.recreateAllCharts === 'function') {
@@ -478,8 +482,39 @@
                 }
             });
         });
+        document.addEventListener('DOMContentLoaded', function () {
+            if (typeof djangoMessages !== 'undefined') {
+                const iconMap = {
+                    'success': 'success',
+                    'error': 'error',
+                    'danger': 'error',
+                    'warning': 'warning',
+                    'info': 'info',
+                    'debug': 'info'
+                };
+
+                djangoMessages.forEach(function (msg, index) {
+                    setTimeout(function () {
+                        Swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            icon: iconMap[msg.tags] || 'info',
+                            title: msg.text,
+                            showConfirmButton: false,
+                            timer: 3500,
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                                toast.addEventListener('mouseenter', Swal.stopTimer);
+                                toast.addEventListener('mouseleave', Swal.resumeTimer);
+                            }
+                        });
+                    }, index * 300); // stagger multiple toasts slightly
+                });
+            }
+        });
     </script>
-    
+
     {% block custom_js %}{% endblock custom_js %}
 </body>
+
 </html>
