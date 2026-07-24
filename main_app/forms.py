@@ -100,13 +100,6 @@ class StaffForm(CustomUserForm):
             ['employee_id','designation','department']
 
 
-# class CourseForm(FormSettings):
-#     def __init__(self, *args, **kwargs):
-#         super(CourseForm, self).__init__(*args, **kwargs)
-
-#     class Meta:
-#         fields = ['name']
-#         model = Course
 
 
 class SubjectForm(FormSettings):
@@ -227,13 +220,6 @@ class EditResultForm(FormSettings):
             'practical_marks_obtained',
             ]
 
-#todos
-# class TodoForm(forms.ModelForm):
-#     class Meta:
-#         model=Todo
-#         fields=["title","is_finished"]
-
-#issue book
 
 class IssueBookForm(forms.Form):
     book = forms.ModelChoiceField(
@@ -303,3 +289,11 @@ class SubjectAllocationForm(FormSettings):
             "subject",
             "session",
         ]
+
+class StaffPasswordForm(forms.Form):
+    password = forms.CharField(widget=forms.PasswordInput, label="New Password", required=True)
+
+    def __init__(self, *args, **kwargs):
+        super(StaffPasswordForm, self).__init__(*args, **kwargs)
+        for field in self.visible_fields():
+            field.field.widget.attrs['class'] = 'form-control'

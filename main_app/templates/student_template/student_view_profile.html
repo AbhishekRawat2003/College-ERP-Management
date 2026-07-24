@@ -2,38 +2,217 @@
 {% load static %}
 {% block page_title %}{{page_title}}{% endblock page_title %}
 
+{% block custom_css %}
+<style>
+    .profile-header-card {
+        background: linear-gradient(135deg, var(--primary-color, #5e64ff) 0%, #7b7fff 100%);
+        border-radius: 12px;
+        padding: 30px;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+    }
+
+    .profile-avatar-wrap {
+        width: 110px;
+        height: 110px;
+        border-radius: 50%;
+        border: 4px solid rgba(255, 255, 255, 0.6);
+        overflow: hidden;
+        flex-shrink: 0;
+        background: rgba(255, 255, 255, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .profile-avatar-wrap img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .profile-avatar-wrap i {
+        font-size: 60px;
+        color: #fff;
+    }
+
+    .profile-header-info h2 {
+        margin: 0 0 4px 0;
+        font-weight: 600;
+    }
+
+    .profile-header-info p {
+        margin: 0;
+        opacity: 0.9;
+    }
+
+    .profile-badge {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.2);
+        padding: 4px 14px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        margin-top: 8px;
+    }
+
+    .info-section-title {
+        font-size: 0.95rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--primary-color, #5e64ff);
+        margin: 24px 0 12px 0;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #f1f3f4;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 18px;
+    }
+
+    .info-item label {
+        display: block;
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #8d99a6;
+        margin-bottom: 4px;
+    }
+
+    .info-item .value {
+        font-size: 1rem;
+        font-weight: 500;
+        color: #262626;
+    }
+
+    .info-item .value.muted {
+        color: #b0b7bd;
+        font-weight: 400;
+        font-style: italic;
+    }
+</style>
+{% endblock custom_css %}
+
 {% block content %}
 
 <section class="content">
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
-                <!-- general form elements -->
+
+                <!-- Profile Header -->
+                <div class="profile-header-card">
+                    <div class="profile-avatar-wrap">
+                        {% if student.admin.profile_pic %}
+                        <img src="{{ student.admin.profile_pic }}" alt="Profile Picture">
+                        {% else %}
+                        <i class="fas fa-user-graduate"></i>
+                        {% endif %}
+                    </div>
+                    <div class="profile-header-info">
+                        <h2>{{ student.admin.first_name }} {{ student.admin.last_name }}</h2>
+                        <p><i class="fas fa-envelope"></i>&nbsp; {{ student.admin.email }}</p>
+                        <span class="profile-badge">
+                            <i class="fas fa-id-badge"></i> Roll No: {{ student.roll_number }}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Details Card -->
                 <div class="card card-dark">
                     <div class="card-header">
-                        <h3 class="card-title">{{page_title}}</h3>
+                        <h3 class="card-title">Profile Details</h3>
                     </div>
+                    <div class="card-body">
 
-                    {% include "main_app/form_template.html" with messages=messages  form=form button_text="Update Profile"%}
+                        <div class="info-section-title">Personal Information</div>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <label>First Name</label>
+                                <div class="value">{{ student.admin.first_name|default:"—" }}</div>
+                            </div>
+                            <div class="info-item">
+                                <label>Last Name</label>
+                                <div class="value">{{ student.admin.last_name|default:"—" }}</div>
+                            </div>
+                            <div class="info-item">
+                                <label>Email</label>
+                                <div class="value">{{ student.admin.email|default:"—" }}</div>
+                            </div>
+                            <div class="info-item">
+                                <label>Gender</label>
+                                <div class="value">{{ student.admin.get_gender_display|default:"—" }}</div>
+                            </div>
+                            <div class="info-item" style="grid-column: 1 / -1;">
+                                <label>Address</label>
+                                <div class="value">{{ student.admin.address|default:"—" }}</div>
+                            </div>
+                        </div>
+
+                        <div class="info-section-title">Academic Information</div>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <label>Roll Number</label>
+                                <div class="value">{{ student.roll_number|default:"—" }}</div>
+                            </div>
+                            <div class="info-item">
+                                <label>Enrollment Number</label>
+                                <div class="value">{{ student.enrollment_number|default:"—" }}</div>
+                            </div>
+                            <div class="info-item">
+                                <label>Program</label>
+                                <div class="value">{{ student.program.name|default:"—" }}</div>
+                            </div>
+                            <div class="info-item">
+                                <label>Branch</label>
+                                <div class="value">{{ student.branch.name|default:"—" }}</div>
+                            </div>
+                            <div class="info-item">
+                                <label>Current Semester</label>
+                                <div class="value">
+                                    {% if student.current_semester %}
+                                    Semester {{ student.current_semester.number }}
+                                    {% else %}
+                                    —
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <label>Session</label>
+                                <div class="value">{{ student.session|default:"—" }}</div>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-info mt-4" style="margin-top: 24px;">
+                            <i class="fas fa-info-circle"></i>&nbsp;
+                            Your profile details are managed by the administration. If any information here is
+                            incorrect, please contact your HOD/Admin office.
+                        </div>
+
+                    </div>
                 </div>
-                <!-- /.card -->
+                <div class="info-section-title">Update Password</div>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="form-group" style="max-width: 320px;">
+                        <label>New Password</label>
+                        {{ form.password }}
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update Password</button>
+                </form>
 
+                <div class="alert alert-info mt-4" style="margin-top: 24px;">
+                    <i class="fas fa-info-circle"></i>&nbsp;
+                    Other profile details managed by administration. Contact HOD/Admin office for changes.
+                </div>
             </div>
         </div>
     </div>
 </section>
 {% endblock content %}
-
-{% block custom_js %}
-  <script>
-      $(document).ready(function(){
-            var ifNotfied = false;
-          $("#id_password").on("change", function(){
-              if (!ifNotfied){
-                ifNotfied = true;
-                alert("After a successful profile update:\n\nYour session would be terminated\nYou would be required to login again")
-              }
-          })
-      })
-  </script>
-{% endblock custom_js %}

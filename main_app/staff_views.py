@@ -12,30 +12,7 @@ from .models import *
 from . import forms, models
 from datetime import date
 
-# def staff_home(request):
-#     staff = get_object_or_404(Staff, admin=request.user)
-#     total_students = Student.objects.filter(course=staff.course).count()
-#     total_leave = LeaveReportStaff.objects.filter(staff=staff).count()
-#     subjects = Subject.objects.filter(staff=staff)
-#     total_subject = subjects.count()
-#     attendance_list = Attendance.objects.filter(subject__in=subjects)
-#     total_attendance = attendance_list.count()
-#     attendance_list = []
-#     subject_list = []
-#     for subject in subjects:
-#         attendance_count = Attendance.objects.filter(subject=subject).count()
-#         subject_list.append(subject.name)
-#         attendance_list.append(attendance_count)
-#     context = {
-#         'page_title': 'Staff Panel - ' + str(staff.admin.first_name) + ' ' + str(staff.admin.last_name[0]) + '' + ' (' + str(staff.course) + ')',
-#         'total_students': total_students,
-#         'total_attendance': total_attendance,
-#         'total_leave': total_leave,
-#         'total_subject': total_subject,
-#         'subject_list': subject_list,
-#         'attendance_list': attendance_list
-#     }
-#     return render(request, "staff_template/erpnext_staff_home.html", context)
+
 def staff_home(request):
     staff = get_object_or_404(Staff, admin=request.user)
     subjects = Subject.objects.filter(allocations__staff=staff).distinct()
@@ -92,25 +69,6 @@ def staff_update_attendance(request):
     return render(request, 'staff_template/staff_update_attendance.html', context)
 
 
-# @csrf_exempt
-# def get_students(request):
-#     subject_id = request.POST.get('subject')
-#     session_id = request.POST.get('session')
-#     try:
-#         subject = get_object_or_404(Subject, id=subject_id)
-#         session = get_object_or_404(Session, id=session_id)
-#         students = Student.objects.filter(
-#             course_id=subject.course.id, session=session)
-#         student_data = []
-#         for student in students:
-#             data = {
-#                     "id": student.id,
-#                     "name": student.admin.last_name + " " + student.admin.first_name
-#                     }
-#             student_data.append(data)
-#         return JsonResponse(json.dumps(student_data), content_type='application/json', safe=False)
-#     except Exception as e:
-#         return e
 
 
 @csrf_exempt
@@ -134,6 +92,8 @@ def get_students(request):
         return HttpResponse(json.dumps([]), content_type='application/json', safe=False)
 
 
+
+
 @csrf_exempt
 def save_attendance(request):
     student_data = request.POST.get('student_ids')
@@ -148,26 +108,15 @@ def save_attendance(request):
         attendance.save()
 
         for student_dict in students:
-            student = get_object_or_404(Student, id=student_dict.get('id'))
+            student = get_object_or_404(Student, admin_id=student_dict.get('id'))
             attendance_report = AttendanceReport(student=student, attendance=attendance, status=student_dict.get('status'))
             attendance_report.save()
     except Exception as e:
-        return None
+        return HttpResponse("Error: " + str(e))
 
     return HttpResponse("OK")
 
 
-# def staff_update_attendance(request):
-#     staff = get_object_or_404(Staff, admin=request.user)
-#     subjects = Subject.objects.filter(staff_id=staff)
-#     sessions = Session.objects.all()
-#     context = {
-#         'subjects': subjects,
-#         'sessions': sessions,
-#         'page_title': 'Update Attendance'
-#     }
-
-#     return render(request, 'staff_template/staff_update_attendance.html', context)
 
 
 @csrf_exempt
@@ -254,43 +203,21 @@ def staff_feedback(request):
     return render(request, "staff_template/staff_feedback.html", context)
 
 
+
 def staff_view_profile(request):
     staff = get_object_or_404(Staff, admin=request.user)
-    form = StaffEditForm(request.POST or None, request.FILES or None,instance=staff)
-    context = {'form': form, 'page_title': 'View/Update Profile'}
+    form = StaffPasswordForm(request.POST or None)
+    context = {'staff': staff, 'form': form, 'page_title': 'My Profile'}
     if request.method == 'POST':
-        try:
-            if form.is_valid():
-                first_name = form.cleaned_data.get('first_name')
-                last_name = form.cleaned_data.get('last_name')
-                password = form.cleaned_data.get('password') or None
-                address = form.cleaned_data.get('address')
-                gender = form.cleaned_data.get('gender')
-                passport = request.FILES.get('profile_pic') or None
-                admin = staff.admin
-                if password != None:
-                    admin.set_password(password)
-                if passport != None:
-                    fs = FileSystemStorage()
-                    filename = fs.save(passport.name, passport)
-                    passport_url = fs.url(filename)
-                    admin.profile_pic = passport_url
-                admin.first_name = first_name
-                admin.last_name = last_name
-                admin.address = address
-                admin.gender = gender
-                admin.save()
-                staff.save()
-                messages.success(request, "Profile Updated!")
-                return redirect(reverse('staff_view_profile'))
-            else:
-                messages.error(request, "Invalid Data Provided")
-                return render(request, "staff_template/staff_view_profile.html", context)
-        except Exception as e:
-            messages.error(
-                request, "Error Occured While Updating Profile " + str(e))
-            return render(request, "staff_template/staff_view_profile.html", context)
-
+        if form.is_valid():
+            password = form.cleaned_data.get('password')
+            admin = staff.admin
+            admin.set_password(password)
+            admin.save()
+            messages.success(request, "Password Updated! Please login again.")
+            return redirect(reverse('user_login'))
+        else:
+            messages.error(request, "Invalid Data Provided")
     return render(request, "staff_template/staff_view_profile.html", context)
 
 
@@ -316,38 +243,6 @@ def staff_view_notification(request):
     return render(request, "staff_template/staff_view_notification.html", context)
 
 
-# def staff_add_result(request):
-#     staff = get_object_or_404(Staff, admin=request.user)
-#     subjects = Subject.objects.filter(staff=staff)
-#     sessions = Session.objects.all()
-#     context = {
-#         'page_title': 'Result Upload',
-#         'subjects': subjects,
-#         'sessions': sessions
-#     }
-#     if request.method == 'POST':
-#         try:
-#             student_id = request.POST.get('student_list')
-#             subject_id = request.POST.get('subject')
-#             test = request.POST.get('test')
-#             exam = request.POST.get('exam')
-#             student = get_object_or_404(Student, id=student_id)
-#             subject = get_object_or_404(Subject, id=subject_id)
-#             try:
-#                 data = StudentResult.objects.get(
-#                     student=student, subject=subject)
-#                 data.exam = exam
-#                 data.test = test
-#                 data.save()
-#                 messages.success(request, "Scores Updated")
-#             except:
-#                 result = StudentResult(student=student, subject=subject, test=test, exam=exam)
-#                 result.save()
-#                 messages.success(request, "Scores Saved")
-#         except Exception as e:
-#             messages.warning(request, "Error Occured While Processing Form")
-#     return render(request, "staff_template/staff_add_result.html", context)
-
 
 
 def staff_add_result(request):
@@ -368,7 +263,7 @@ def staff_add_result(request):
             theory_marks = request.POST.get('theory_marks_obtained') or 0
             practical_marks = request.POST.get('practical_marks_obtained') or 0
 
-            student = get_object_or_404(Student, id=student_id)
+            student = get_object_or_404(Student, admin_id=student_id)
             subject = get_object_or_404(Subject, id=subject_id)
             session = get_object_or_404(Session, id=session_id)
 
@@ -384,22 +279,6 @@ def staff_add_result(request):
         except Exception as e:
             messages.warning(request, "Error Occured While Processing Form: " + str(e))
     return render(request, "staff_template/staff_add_result.html", context)
-
-# @csrf_exempt
-# def fetch_student_result(request):
-#     try:
-#         subject_id = request.POST.get('subject')
-#         student_id = request.POST.get('student')
-#         student = get_object_or_404(Student, id=student_id)
-#         subject = get_object_or_404(Subject, id=subject_id)
-#         result = StudentResult.objects.get(student=student, subject=subject)
-#         result_data = {
-#             'exam': result.exam,
-#             'test': result.test
-#         }
-#         return HttpResponse(json.dumps(result_data))
-#     except Exception as e:
-#         return HttpResponse('False')
 
 
 
@@ -440,22 +319,6 @@ def add_book(request):
     }
     return render(request, "staff_template/add_book.html",context)
 
-#issue book
-
-
-# def issue_book(request):
-#     form = forms.IssueBookForm()
-#     if request.method == "POST":
-#         form = forms.IssueBookForm(request.POST)
-#         if form.is_valid():
-#             obj = models.IssuedBook()
-#             obj.student_id = request.POST['name2']
-#             obj.isbn = request.POST['isbn2']
-#             obj.save()
-#             alert = True
-#             return render(request, "staff_template/issue_book.html", {'obj':obj, 'alert':alert})
-#     return render(request, "staff_template/issue_book.html", {'form':form})
-
 
 
 def issue_book(request):
@@ -472,25 +335,6 @@ def issue_book(request):
         else:
             messages.error(request, "Form has errors!")
     return render(request, "staff_template/issue_book.html", {'form': form})
-
-# def view_issued_book(request):
-#     issuedBooks = IssuedBook.objects.all()
-#     details = []
-#     for i in issuedBooks:
-#         days = (date.today()-i.issued_date)
-#         d=days.days
-#         fine=0
-#         if d>14:
-#             day=d-14
-#             fine=day*5
-#         books = list(models.Book.objects.filter(isbn=i.isbn))
-#         # students = list(models.Student.objects.filter(admin=i.admin))
-#         i=0
-#         for l in books:
-#             t=(books[i].name,books[i].isbn,issuedBooks[0].issued_date,issuedBooks[0].expiry_date,fine)
-#             i=i+1
-#             details.append(t)
-#     return render(request, "staff_template/view_issued_book.html", {'issuedBooks':issuedBooks, 'details':details})
 
 
 def view_issued_book(request):
@@ -509,3 +353,5 @@ def view_issued_book(request):
             fine
         ))
     return render(request, "staff_template/view_issued_book.html", {'issuedBooks': issuedBooks, 'details': details})
+
+
